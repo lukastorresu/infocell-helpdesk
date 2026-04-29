@@ -1,0 +1,68 @@
+# ==========================================
+# Arquivos de Log e Sistema
+# ==========================================
+*.log
+npm-debug.log
+yarn-error.log
+.DS_Store
+Thumbs.db
+
+# ==========================================
+# Variáveis de Ambiente (Senhas e APIs)
+# ==========================================
+.env
+.env.backup
+.env.production
+.env.dusk.local
+
+# ==========================================
+# IDEs e Ferramentas
+# ==========================================
+.phpactor.json
+.phpunit.result.cache
+/.fleet
+/.idea
+/.nova
+/.phpunit.cache
+/.vscode
+/.zed
+Homestead.json
+Homestead.yaml
+
+# ==========================================
+# Dependências e Build
+# ==========================================
+/auth.json
+/node_modules
+/public/build
+/public/hot
+/vendor
+
+# ==========================================
+# Laravel Storage & Framework
+# ==========================================
+/public/storage
+/storage/*.key
+/storage/pail
+/storage/app/*
+!/storage/app/public
+!/storage/app/.gitignore
+/storage/framework/*
+!/storage/framework/.gitignore
+/storage/logs/*
+!/storage/logs/.gitignore
+
+# ==========================================
+# Laravel Dusk (Testes E2E)
+# ==========================================
+/tests/Browser/console/*
+/tests/Browser/screenshots/*
+/tests/Browser/video/*
+
+# ==========================================
+# Bancos de Dados Locais
+# ==========================================
+database/*.sqlite
+database/*.sqlite3
+*.db
+*.sql
