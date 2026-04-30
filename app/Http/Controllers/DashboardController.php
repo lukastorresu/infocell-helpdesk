@@ -21,18 +21,18 @@ class DashboardController extends Controller
 
         $chamadosAbertosHoje = Chamado::whereDate('created_at', $hoje)->count();
 
-        $chamadosConcluidosSemanaQuery = Chamado::where('concluido', true)
+        $chamadosConcluidosSemanaQuery = Chamado::where('status', 'concluido')
                                            ->whereBetween('created_at', [$inicioSemana->startOfDay(), $fimSemana->endOfDay()]);
 
         $chamadosConcluidosSemana = $chamadosConcluidosSemanaQuery->count();
         $faturamentoSemana = $chamadosConcluidosSemanaQuery->sum('valor_total');
 
-        $faturamentoMes = Chamado::where('concluido', true)
+        $faturamentoMes = Chamado::where('status', 'concluido')
                                  ->whereMonth('created_at', now()->month)
                                  ->whereYear('created_at', now()->year)
                                  ->sum('valor_total');
 
-        $tiposServicoData = Chamado::where('chamados.concluido', true)
+        $tiposServicoData = Chamado::where('chamados.status', 'concluido')
             ->whereMonth('chamados.created_at', now()->month)
             ->join('tipos_chamado', 'chamados.tipo_id', '=', 'tipos_chamado.id')
             ->select(
