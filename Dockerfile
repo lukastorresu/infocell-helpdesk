@@ -29,8 +29,13 @@ RUN composer install --optimize-autoloader --no-dev
 # Compila os assets do Frontend (Tailwind/Vite)
 RUN npm install && npm run build
 
-# Dá as permissões corretas
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-
+# Cria as pastas que o Git ignora e dá as permissões corretas
+RUN mkdir -p /var/www/html/storage/framework/views \
+    /var/www/html/storage/framework/cache \
+    /var/www/html/storage/framework/sessions \
+    /var/www/html/bootstrap/cache \
+    && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+    
 # Expõe a porta 80
 EXPOSE 80
