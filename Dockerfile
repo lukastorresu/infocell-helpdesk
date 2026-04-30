@@ -1,12 +1,14 @@
 # Usa a imagem oficial do PHP com Apache
 FROM php:8.2-apache
 
-# Atualiza o sistema e instala as dependências necessárias para o Laravel
+# Atualiza o sistema, instala Node.js (v20) e dependências do PHP
 RUN apt-get update && apt-get install -y \
     git curl zip unzip libpng-dev libonig-dev libxml2-dev libzip-dev \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
-# Habilita o mod_rewrite do Apache (essencial para as rotas do Laravel funcionarem)
+# Habilita o mod_rewrite do Apache
 RUN a2enmod rewrite
 
 # Aponta o servidor para a pasta /public do seu projeto
@@ -14,18 +16,21 @@ ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-# Instala o Composer diretamente no container
+# Instala o Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copia todos os arquivos do seu projeto para dentro do servidor
+# Copia todos os arquivos do projeto
 WORKDIR /var/www/html
 COPY . .
 
-# Instala as dependências do PHP (ignorando pacotes de desenvolvimento como o Dusk)
+# Instala as dependências do PHP
 RUN composer install --optimize-autoloader --no-dev
 
-# Dá as permissões corretas para o Laravel poder salvar logs e arquivos
+# Compila os assets do Frontend (Tailwind/Vite)
+RUN npm install && npm run build
+
+# Dá as permissões corretas
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Avisa o Render que o Apache vai usar a porta 80 internamente
+# Expõe a porta 80
 EXPOSE 80
