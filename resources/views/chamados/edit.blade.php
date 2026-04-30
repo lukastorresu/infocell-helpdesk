@@ -93,18 +93,22 @@
                     });
 
                     // Script para mostrar/ocultar o campo de valor
-                    const concluidoCheckbox = document.getElementById('concluido');
-                    const valorContainer = document.getElementById('valor-total-container');
-                    const valorInput = document.getElementById('valor_total');
+                    const statusSelect = document.getElementById('status');
+                    const divValor = document.getElementById('div-valor');
+                    const inputValor = document.getElementById('valor_total');
 
-                    concluidoCheckbox.addEventListener('change', function() {
-                        if (this.checked) {
-                            valorContainer.style.display = 'block';
+                    function toggleValorVisibility() {
+                        if (statusSelect.value === 'concluido') {
+                            divValor.style.display = 'block';
                         } else {
-                            valorContainer.style.display = 'none';
-                            valorInput.value = ''; // Limpa o valor se desmarcar
+                            divValor.style.display = 'none';
+                            inputValor.value = '';
                         }
-                    });
+                    }
+
+                    toggleValorVisibility();
+
+                    statusSelect.addEventListener('change', toggleValorVisibility);
                 });
             </script>
 </x-app-layout>
