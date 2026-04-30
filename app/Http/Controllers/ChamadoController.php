@@ -54,9 +54,9 @@ class ChamadoController extends Controller
     public function create(): View
     {
         $clientes = Cliente::orderBy('nome')->get();
-        
-        $tecnicos = User::orderBy('nome')->get(); 
-        
+
+        $tecnicos = User::orderBy('nome')->get();
+
         $tiposChamado = TipoChamado::orderBy('nome')->get();
         return view('chamados.create', compact('clientes', 'tecnicos', 'tiposChamado'));
     }
@@ -71,7 +71,7 @@ class ChamadoController extends Controller
         ]);
 
         $dados = $request->all();
-        
+
         // Pega o valor do tecnico_id e joga para a coluna certa
         $dados['user_id'] = $dados['tecnico_id'];
         unset($dados['tecnico_id']); // Apaga a chave velha para não confundir o banco
@@ -89,9 +89,9 @@ class ChamadoController extends Controller
     public function edit(Chamado $chamado): View
     {
         $clientes = Cliente::orderBy('nome')->get();
-        
-        $tecnicos = User::orderBy('nome')->get(); 
-        
+
+        $tecnicos = User::orderBy('nome')->get();
+
         $tiposChamado = TipoChamado::orderBy('nome')->get();
         return view('chamados.edit', compact('chamado', 'clientes', 'tecnicos', 'tiposChamado'));
     }
@@ -103,13 +103,14 @@ class ChamadoController extends Controller
             'tecnico_id' => 'required|exists:users,id',
             'tipo_id' => 'required|exists:tipos_chamado,id',
             'descricao' => 'required|string',
-            'concluido' => 'required|boolean',
-            'valor_total' => 'required_if:concluido,1|nullable|regex:/^\d{1,8}(,\d{2})?$/',
+            'status' => 'required|in:aberto,cancelado,concluido',
+            'valor_total' => 'required_if:status,concluido|nullable|regex:/^\d{1,8}(,\d{2})?$/',
         ], [
             'valor_total.required_if' => 'O campo valor total é obrigatório ao concluir um chamado.',
-            'valor_total.regex' => 'O valor total deve estar no formato XXXX,XX.'
+            'valor_total.regex' => 'O valor total deve estar no formato XXXX,XX.',
+            'status.in' => 'O status selecionado é inválido.'
         ]);
-        
+
         $dados = $request->all();
 
         $dados['user_id'] = $dados['tecnico_id'];
@@ -120,9 +121,9 @@ class ChamadoController extends Controller
         } else {
             $dados['valor_total'] = null;
         }
-        
+
         $chamado->update($dados);
-        
+
         return redirect()->route('chamados.index')->with('success', 'Chamado atualizado com sucesso!');
     }
 
@@ -131,11 +132,11 @@ class ChamadoController extends Controller
         $chamado->delete();
         return redirect()->route('chamados.index')->with('success', 'Chamado excluído com sucesso!');
     }
-    
+
     public function generatePDF(Chamado $chamado)
     {
         $chamado->load(['cliente', 'tecnico', 'tipoChamado']);
         $pdf = Pdf::loadView('chamados.pdf', compact('chamado'));
-        return $pdf->stream('ordem_servico_'.$chamado->id.'.pdf');
+        return $pdf->stream('ordem_servico_' . $chamado->id . '.pdf');
     }
 }
