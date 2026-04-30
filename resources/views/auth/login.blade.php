@@ -36,7 +36,4 @@
             <button type="submit" class="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 rounded-md text-white text-sm">Entrar</button>
         </div>
     </form>
-    <div class="text-center mt-6">
-        <a href="{{ route('register') }}" class="text-blue-600 hover:underline">Não tem uma conta? Cadastre um novo técnico</a>
-    </div>
 </x-guest-layout>

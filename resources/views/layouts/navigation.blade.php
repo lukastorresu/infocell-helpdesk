@@ -12,6 +12,7 @@
                 <a href="{{ route('chamados.index') }}" class="hover:text-blue-600">Chamados</a>
 				@if(auth()->user()->role === 'admin')
 				<a href="/usuarios">Gerenciar Usuários</a>
+                <a href="/register">Registrar Novo Técnico</a>
 				@endif
             </nav>
 
