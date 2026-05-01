@@ -27,7 +27,7 @@
                         <select name="search_tipo" id="search_tipo" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                             <option value="">Todos</option>
                             @foreach($tiposChamado as $tipo)
-                                <option value="{{ $tipo->id }}" @selected(request('search_tipo') == $tipo->id)>{{ $tipo->nome }}</option>
+                            <option value="{{ $tipo->id }}" @selected(request('search_tipo')==$tipo->id)>{{ $tipo->nome }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -37,8 +37,8 @@
                         <label for="search_status" class="block text-sm font-medium text-gray-700">Status</label>
                         <select name="search_status" id="search_status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                             <option value="">Todos</option>
-                            <option value="0" @selected(request('search_status') === '0')>Em Aberto</option>
-                            <option value="1" @selected(request('search_status') === '1')>Concluído</option>
+                            <option value="0" @selected(request('search_status')==='0' )>Em Aberto</option>
+                            <option value="1" @selected(request('search_status')==='1' )>Concluído</option>
                         </select>
                     </div>
 
@@ -66,9 +66,9 @@
         </div>
 
         @if(session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-                {{ session('success') }}
-            </div>
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+            {{ session('success') }}
+        </div>
         @endif
 
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
@@ -86,30 +86,32 @@
                 </thead>
                 <tbody class="text-gray-700">
                     @forelse ($chamados as $chamado)
-                        <tr class="border-b border-gray-200 hover:bg-gray-100">
-                            <td class="py-3 px-4">{{ $chamado->id }}</td>
-                            <td class="py-3 px-4">{{ $chamado->cliente->nome }}</td>
-                            <td class="py-3 px-4">{{ $chamado->tipoChamado->nome }}</td>
-                            <td class="py-3 px-4">{{ $chamado->tecnico->nome }}</td>
-                            <td class="py-3 px-4">{{ $chamado->created_at->format('d/m/Y H:i') }}</td>
-                            <td class="py-3 px-4">
-                                @if($chamado->concluido)
-                                    <span class="bg-green-200 text-green-800 py-1 px-3 rounded-full text-xs">Concluído</span>
-                                @else
-                                    <span class="bg-yellow-200 text-yellow-800 py-1 px-3 rounded-full text-xs">Em Aberto</span>
-                                @endif
-                            </td>
-                            <td class="py-3 px-4">
-                                <div class="flex items-center space-x-3">
-                                    <a href="{{ route('chamados.show', $chamado->id) }}" class="text-blue-500 hover:text-blue-700">Ver</a>
-                                    <a href="{{ route('chamados.edit', $chamado->id) }}" class="text-yellow-500 hover:text-yellow-700">Editar</a>
-                                </div>
-                            </td>
-                        </tr>
+                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <td class="py-3 px-4">{{ $chamado->id }}</td>
+                        <td class="py-3 px-4">{{ $chamado->cliente->nome }}</td>
+                        <td class="py-3 px-4">{{ $chamado->tipoChamado->nome }}</td>
+                        <td class="py-3 px-4">{{ $chamado->tecnico->nome }}</td>
+                        <td class="py-3 px-4">{{ $chamado->created_at->format('d/m/Y H:i') }}</td>
+                        <td class="py-3 px-4">
+                            @if($chamado->status === 'concluido')
+                            <span class="bg-green-200 text-green-800 py-1 px-3 rounded-full text-xs">Concluído</span>
+                            @elseif($chamado->status === 'cancelado')
+                            <span class="bg-red-200 text-green-800 py-1 px-3 rounded-full text-xs">Cancelado</span>
+                            @else
+                            <span class="bg-yellow-200 text-yellow-800 py-1 px-3 rounded-full text-xs">Em Aberto</span>
+                            @endif
+                        </td>
+                        <td class="py-3 px-4">
+                            <div class="flex items-center space-x-3">
+                                <a href="{{ route('chamados.show', $chamado->id) }}" class="text-blue-500 hover:text-blue-700">Ver</a>
+                                <a href="{{ route('chamados.edit', $chamado->id) }}" class="text-yellow-500 hover:text-yellow-700">Editar</a>
+                            </div>
+                        </td>
+                    </tr>
                     @empty
-                        <tr>
-                            <td colspan="7" class="text-center py-4">Nenhum chamado encontrado.</td>
-                        </tr>
+                    <tr>
+                        <td colspan="7" class="text-center py-4">Nenhum chamado encontrado.</td>
+                    </tr>
                     @endforelse
                 </tbody>
             </table>

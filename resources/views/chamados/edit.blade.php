@@ -63,52 +63,58 @@
                 </select>
             </div>
 
-            <!-- Div do Valor Total (Adicionamos o ID 'div-valor' e escondemos por padrão) -->
             <div id="div-valor" class="mb-4" style="display: none;">
                 <label for="valor_total" class="block text-sm font-medium text-gray-700">Valor Total (R$)</label>
-                <!-- Mantenha o seu input original aqui dentro -->
                 <input type="text" name="valor_total" id="valor_total" value="{{ old('valor_total', $chamado->valor_total) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
             </div>
-
-            <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    // Script do Tom Select para busca de cliente
-                    new TomSelect('#select-cliente', {
-                        valueField: 'id',
-                        labelField: 'text',
-                        searchField: 'text',
-                        create: false,
-                        load: function(query, callback) {
-                            if (!query.length) return callback();
-                            const url = `{{ route('clientes.search') }}?q=${encodeURIComponent(query)}`;
-                            fetch(url)
-                                .then(response => response.json())
-                                .then(json => {
-                                    callback(json);
-                                }).catch(() => {
-                                    callback();
-                                });
-                        }
-                    });
-
-                    // Script para mostrar/ocultar o campo de valor
-                    const statusSelect = document.getElementById('status');
-                    const divValor = document.getElementById('div-valor');
-                    const inputValor = document.getElementById('valor_total');
-
-                    function toggleValorVisibility() {
-                        if (statusSelect.value === 'concluido') {
-                            divValor.style.display = 'block';
-                        } else {
-                            divValor.style.display = 'none';
-                            inputValor.value = '';
-                        }
+            <div class="flex items-center justify-between mt-6">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Atualizar Chamado
+                </button>
+                <a href="{{ route('chamados.index') }}" class="inline-block align-baseline font-bold text-sm text-gray-600 hover:text-gray-900">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+        <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Script do Tom Select para busca de cliente
+                new TomSelect('#select-cliente', {
+                    valueField: 'id',
+                    labelField: 'text',
+                    searchField: 'text',
+                    create: false,
+                    load: function(query, callback) {
+                        if (!query.length) return callback();
+                        const url = `{{ route('clientes.search') }}?q=${encodeURIComponent(query)}`;
+                        fetch(url)
+                            .then(response => response.json())
+                            .then(json => {
+                                callback(json);
+                            }).catch(() => {
+                                callback();
+                            });
                     }
-
-                    toggleValorVisibility();
-
-                    statusSelect.addEventListener('change', toggleValorVisibility);
                 });
-            </script>
+
+                // Script para mostrar/ocultar o campo de valor
+                const statusSelect = document.getElementById('status');
+                const divValor = document.getElementById('div-valor');
+                const inputValor = document.getElementById('valor_total');
+
+                function toggleValorVisibility() {
+                    if (statusSelect.value === 'concluido') {
+                        divValor.style.display = 'block';
+                    } else {
+                        divValor.style.display = 'none';
+                        inputValor.value = '';
+                    }
+                }
+
+                toggleValorVisibility();
+
+                statusSelect.addEventListener('change', toggleValorVisibility);
+            });
+        </script>
 </x-app-layout>
