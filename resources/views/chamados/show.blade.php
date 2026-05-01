@@ -11,10 +11,12 @@
                     <p class="text-sm text-gray-500">Aberto em: {{ $chamado->created_at->format('d/m/Y H:i') }}</p>
                 </div>
                 <div>
-                    @if($chamado->concluido)
-                        <span class="bg-green-200 text-green-800 py-1 px-3 rounded-full text-sm font-semibold">Concluído</span>
+                    @if($chamado->status === 'concluido')
+                    <span class="bg-green-200 text-green-800 py-1 px-3 rounded-full text-sm font-semibold">Concluído</span>
+                    @elseif($chamado->status === 'cancelado')
+                    <span class="bg-red-200 text-red-800 py-1 px-3 rounded-full text-sm font-semibold">Cancelado</span>
                     @else
-                        <span class="bg-yellow-200 text-yellow-800 py-1 px-3 rounded-full text-sm font-semibold">Em Aberto</span>
+                    <span class="bg-yellow-200 text-yellow-800 py-1 px-3 rounded-full text-sm font-semibold">Em Aberto</span>
                     @endif
                 </div>
             </div>
@@ -48,12 +50,12 @@
             <a href="{{ url()->previous() }}" class="bg-gray-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-600">
                 &larr; Voltar
             </a>
-            
+
             <!-- Botão para Gerar PDF (visível apenas se o chamado estiver concluído) -->
-            @if($chamado->concluido)
-                <a href="{{ route('chamados.pdf', $chamado->id) }}" target="_blank" class="bg-red-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700">
-                    Gerar PDF
-                </a>
+            @if($chamado->status === 'concluido')
+            <a href="{{ route('chamados.pdf', $chamado->id) }}" target="_blank" class="bg-red-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700">
+                Gerar PDF
+            </a>
             @endif
         </div>
     </div>
