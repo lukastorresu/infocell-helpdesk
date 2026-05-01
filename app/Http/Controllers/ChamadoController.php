@@ -13,7 +13,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class ChamadoController extends Controller
 {
-    public function index(Request $request): View
+public function index(Request $request): View
     {
         // Pega os valores dos filtros da requisição
         $searchCliente = $request->input('search_cliente');
@@ -21,6 +21,7 @@ class ChamadoController extends Controller
         $searchStatus = $request->input('search_status');
         $searchDateStart = $request->input('search_date_start');
         $searchDateEnd = $request->input('search_date_end');
+        $searchTecnico = $request->input('search_tecnico');
 
         $chamados = Chamado::with(['cliente', 'tecnico', 'tipoChamado'])
             ->when($searchCliente, function ($query, $cliente) {
@@ -31,11 +32,12 @@ class ChamadoController extends Controller
             ->when($searchTipo, function ($query, $tipoId) {
                 $query->where('tipo_id', $tipoId);
             })
-            // Filtra pelo status (0 para Aberto, 1 para Concluído)
-            ->when($searchStatus !== null && $searchStatus !== '', function ($query) use ($searchStatus) {
-                $query->where('concluido', $searchStatus);
+            ->when($searchTecnico, function ($query, $tecnicoId) {
+                $query->where('user_id', $tecnicoId);
             })
-            // Filtra pelo período (data inicial e final)
+            ->when($searchStatus !== null && $searchStatus !== '', function ($query) use ($searchStatus) {
+                $query->where('status', $searchStatus);
+            })
             ->when($searchDateStart, function ($query, $date) {
                 $query->whereDate('created_at', '>=', $date);
             })
@@ -45,10 +47,11 @@ class ChamadoController extends Controller
             ->latest()
             ->paginate(10);
 
-        // Busca todos os tipos de chamado para popular a lista suspensa
         $tiposChamado = TipoChamado::orderBy('nome')->get();
+        
+        $tecnicos = User::orderBy('nome')->get();
 
-        return view('chamados.index', compact('chamados', 'tiposChamado'));
+        return view('chamados.index', compact('chamados', 'tiposChamado', 'tecnicos'));
     }
 
     public function create(): View

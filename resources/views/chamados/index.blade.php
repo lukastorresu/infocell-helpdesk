@@ -32,13 +32,25 @@
                         </select>
                     </div>
 
+                    <!-- Filtro por Técnico -->
+                    <div>
+                        <label for="search_tecnico" class="block text-sm font-medium text-gray-700">Técnico</label>
+                        <select name="search_tecnico" id="search_tecnico" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <option value="">Todos</option>
+                            @foreach($tecnicos as $tecnico)
+                            <option value="{{ $tecnico->id }}" @selected(request('search_tecnico')==$tecnico->id)>{{ $tecnico->nome }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     <!-- Filtro por Status -->
                     <div>
                         <label for="search_status" class="block text-sm font-medium text-gray-700">Status</label>
                         <select name="search_status" id="search_status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                             <option value="">Todos</option>
-                            <option value="0" @selected(request('search_status')==='0' )>Em Aberto</option>
-                            <option value="1" @selected(request('search_status')==='1' )>Concluído</option>
+                            <option value="aberto" @selected(request('search_status')==='aberto' )>Em Aberto</option>
+                            <option value="cancelado" @selected(request('search_status')==='cancelado' )>Cancelado</option>
+                            <option value="concluido" @selected(request('search_status')==='concluido' )>Concluído</option>
                         </select>
                     </div>
 
