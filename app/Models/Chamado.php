@@ -20,7 +20,7 @@ class Chamado extends Model
         'tipo_id',
         'cliente_id',
         'user_id',
-        'concluido',
+        'status',
         'valor_total',
     ];
 
