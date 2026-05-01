@@ -44,6 +44,10 @@
                     <strong>Tipo de Serviço:</strong>
                     <span>{{ $chamado->tipoChamado->nome }}</span>
                 </div>
+                <div class="detail-item">
+                    <strong>Técnico Responsável:</strong>
+                    <span>{{ $chamado->tecnico->nome }}</span>
+                </div>
             </div>
         </div>
 
