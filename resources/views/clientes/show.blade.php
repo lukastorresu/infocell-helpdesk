@@ -77,7 +77,7 @@
         </div>
 
         <div class="mt-6">
-            <a href="{{ url()->previous() }}" class="bg-gray-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-600">
+            <a href="{{ route('chamados.index') }}" class="bg-gray-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-600">
                 &larr; Voltar
             </a>
         </div>
