@@ -8,13 +8,13 @@
                 </div>
                 <div>
                     @if ($cliente->mal_pagador)
-                        <span class="px-3 py-1 text-sm font-semibold rounded-full bg-red-100 text-red-800">
-                            Mal Pagador
-                        </span>
+                    <span class="px-3 py-1 text-sm font-semibold rounded-full bg-red-100 text-red-800">
+                        Mal Pagador
+                    </span>
                     @else
-                        <span class="px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800">
-                            Bom Pagador
-                        </span>
+                    <span class="px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800">
+                        Bom Pagador
+                    </span>
                     @endif
                 </div>
             </div>
@@ -54,14 +54,12 @@
                             <td class="py-3 px-4">{{ $chamado->tipoChamado->nome }}</td>
                             <td class="py-3 px-4">{{ $chamado->created_at->format('d/m/Y') }}</td>
                             <td class="py-3 px-4">
-                                @if ($chamado->concluido)
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                    Concluído
-                                </span>
+                                @if($chamado->status === 'concluido')
+                                <span class="bg-green-200 text-green-800 py-1 px-3 rounded-full text-xs">Concluído</span>
+                                @elseif($chamado->status === 'cancelado')
+                                <span class="bg-red-200 text-green-800 py-1 px-3 rounded-full text-xs">Cancelado</span>
                                 @else
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                    Em Aberto
-                                </span>
+                                <span class="bg-yellow-200 text-yellow-800 py-1 px-3 rounded-full text-xs">Em Aberto</span>
                                 @endif
                             </td>
                             <td class="py-3 px-4">
@@ -78,7 +76,7 @@
             </div>
         </div>
 
-         <div class="mt-6">
+        <div class="mt-6">
             <a href="{{ url()->previous() }}" class="bg-gray-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-600">
                 &larr; Voltar
             </a>
