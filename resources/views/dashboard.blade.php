@@ -23,7 +23,7 @@
                 </div>
             </a>
             <!-- Card de Chamados Concluídos na Semana -->
-            <a href="{{ route('chamados.index', ['search_status' => 1, 'search_date_start' => $inicioSemana, 'search_date_end' => $fimSemana]) }}" class="block bg-white p-6 rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
+            <a href="{{ route('chamados.index', ['search_status' => 'concluido', 'search_date_start' => $inicioSemana, 'search_date_end' => $fimSemana]) }}" class="block bg-white p-6 rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
                 <div class="flex justify-between items-start">
                     <div>
                         <h3 class="text-gray-500 text-lg">Concluídos na Semana</h3>
