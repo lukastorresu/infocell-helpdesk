@@ -15,6 +15,10 @@
                 <div>
                     <label for="cliente_id" class="block text-gray-700 font-semibold mb-2">Cliente</label>
                     <select name="cliente_id" id="select-cliente" placeholder="Digite para buscar um cliente..." class="w-full" required></select>
+                    
+                    <div id="alerta-mal-pagador" class="mt-2 p-3 bg-red-100 text-red-700 border border-red-400 rounded-lg text-sm font-bold shadow-sm" style="display: none;">
+                        ⚠️ Atenção: Este cliente possui restrições (Mal Pagador).
+                    </div>
                 </div>
                 <div>
                     <label for="tecnico_id" class="block text-gray-700 font-semibold mb-2">Técnico Responsável</label>
@@ -70,6 +74,20 @@
                         }).catch(() => {
                             callback();
                         });
+                },
+                onChange: function(value) {
+                    if (!value) {
+                        alertaMalPagador.style.display = 'none';
+                        return;
+                    }
+
+                    const clienteSelecionado = this.options[value];
+
+                    if (clienteSelecionado && (clienteSelecionado.mal_pagador == 1 || clienteSelecionado.mal_pagador === true)) {
+                        alertaMalPagador.style.display = 'block';
+                    } else {
+                        alertaMalPagador.style.display = 'none';
+                    }
                 }
             });
         });
