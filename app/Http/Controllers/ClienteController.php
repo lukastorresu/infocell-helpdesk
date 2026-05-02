@@ -78,7 +78,7 @@ class ClienteController extends Controller
         $clients = Cliente::where('nome', 'LIKE', "%{$search}%")
             ->orWhere('id', 'LIKE', "%{$search}%")
             ->limit(10)
-            ->get(['id', 'nome as text']);
+            ->get(['id', 'nome as text', 'mal_pagador']);
 
         return response()->json($clients);
     }
