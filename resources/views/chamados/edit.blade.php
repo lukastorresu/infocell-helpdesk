@@ -33,7 +33,7 @@
                     <label for="tecnico_id" class="block text-gray-700 font-semibold mb-2">Técnico</label>
                     <select name="tecnico_id" id="tecnico_id" class="w-full px-3 py-2 border border-gray-300 rounded-lg" required>
                         @foreach ($tecnicos as $tecnico)
-                        <option value="{{ $tecnico->id }}" @selected($chamado->tecnico_id == $tecnico->id)>{{ $tecnico->nome }}</option>
+                        <option value="{{ $tecnico->id }}" @selected(old('tecnico_id', $chamado->user_id) == $tecnico->id)>{{ $tecnico->nome }}</option>
                         @endforeach
                     </select>
                 </div>
