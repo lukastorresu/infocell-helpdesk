@@ -22,6 +22,7 @@ class Chamado extends Model
         'user_id',
         'status',
         'valor_total',
+        'forma_pagamento',
     ];
 
     public function cliente(): BelongsTo

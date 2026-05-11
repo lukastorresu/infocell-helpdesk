@@ -53,8 +53,7 @@
                 <textarea name="descricao" id="descricao" rows="5" class="w-full px-3 py-2 border border-gray-300 rounded-lg" required>{{ $chamado->descricao }}</textarea>
             </div>
 
-            <!-- Novo Dropdown de Status -->
-            <div class="mb-4">
+            <div class="my-4">
                 <label for="status" class="block text-sm font-medium text-gray-700">Status do Chamado</label>
                 <select id="status" name="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                     <option value="aberto" {{ (old('status', $chamado->status) == 'aberto') ? 'selected' : '' }}>Em Aberto</option>
@@ -63,10 +62,23 @@
                 </select>
             </div>
 
-            <div id="div-valor" class="mb-4" style="display: none;">
-                <label for="valor_total" class="block text-sm font-medium text-gray-700">Valor Total (R$)</label>
-                <input type="text" name="valor_total" id="valor_total" value="{{ old('valor_total', $chamado->valor_total) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+            <div id="div-conclusao" class="grid grid-cols-1 md:grid-cols-2 gap-6" style="display: none;">
+                <div id="div-valor">
+                    <label for="valor_total" class="block text-sm font-medium text-gray-700">Valor Total (R$)</label>
+                    <input type="text" name="valor_total" id="valor_total" value="{{ old('valor_total', $chamado->valor_total) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                </div>
+
+                <div id="div-pagamento">
+                    <label for="forma_pagamento" class="block text-sm font-medium text-gray-700">Forma de Pagamento</label>
+                    <select id="forma_pagamento" name="forma_pagamento" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="">Selecione...</option>
+                        <option value="Pix" {{ (old('forma_pagamento', $chamado->forma_pagamento) == 'Pix') ? 'selected' : '' }}>Pix</option>
+                        <option value="Cartão" {{ (old('forma_pagamento', $chamado->forma_pagamento) == 'Cartão') ? 'selected' : '' }}>Cartão</option>
+                        <option value="Dinheiro" {{ (old('forma_pagamento', $chamado->forma_pagamento) == 'Dinheiro') ? 'selected' : '' }}>Dinheiro</option>
+                    </select>
+                </div>
             </div>
+
             <div class="flex items-center justify-between mt-6">
                 <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                     Atualizar Chamado
@@ -76,45 +88,47 @@
                 </a>
             </div>
         </form>
-        <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Script do Tom Select para busca de cliente
-                new TomSelect('#select-cliente', {
-                    valueField: 'id',
-                    labelField: 'text',
-                    searchField: 'text',
-                    create: false,
-                    load: function(query, callback) {
-                        if (!query.length) return callback();
-                        const url = `{{ route('clientes.search') }}?q=${encodeURIComponent(query)}`;
-                        fetch(url)
-                            .then(response => response.json())
-                            .then(json => {
-                                callback(json);
-                            }).catch(() => {
-                                callback();
-                            });
-                    }
-                });
+    </div>
 
-                // Script para mostrar/ocultar o campo de valor
-                const statusSelect = document.getElementById('status');
-                const divValor = document.getElementById('div-valor');
-                const inputValor = document.getElementById('valor_total');
-
-                function toggleValorVisibility() {
-                    if (statusSelect.value === 'concluido') {
-                        divValor.style.display = 'block';
-                    } else {
-                        divValor.style.display = 'none';
-                        inputValor.value = '';
-                    }
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            new TomSelect('#select-cliente', {
+                valueField: 'id',
+                labelField: 'text',
+                searchField: 'text',
+                create: false,
+                load: function(query, callback) {
+                    if (!query.length) return callback();
+                    const url = `{{ route('clientes.search') }}?q=${encodeURIComponent(query)}`;
+                    fetch(url)
+                        .then(response => response.json())
+                        .then(json => {
+                            callback(json);
+                        }).catch(() => {
+                            callback();
+                        });
                 }
-
-                toggleValorVisibility();
-
-                statusSelect.addEventListener('change', toggleValorVisibility);
             });
-        </script>
+
+            const statusSelect = document.getElementById('status');
+            const divConclusao = document.getElementById('div-conclusao');
+            const inputValor = document.getElementById('valor_total');
+            const selectPagamento = document.getElementById('forma_pagamento');
+
+            function toggleConclusaoVisibility() {
+                if (statusSelect.value === 'concluido') {
+                    divConclusao.style.display = 'grid'; 
+                } else {
+                    divConclusao.style.display = 'none';
+                    inputValor.value = '';
+                    selectPagamento.value = ''; 
+                }
+            }
+
+            toggleConclusaoVisibility();
+
+            statusSelect.addEventListener('change', toggleConclusaoVisibility);
+        });
+    </script>
 </x-app-layout>

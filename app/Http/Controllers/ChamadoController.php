@@ -22,6 +22,7 @@ public function index(Request $request): View
         $searchDateStart = $request->input('search_date_start');
         $searchDateEnd = $request->input('search_date_end');
         $searchTecnico = $request->input('search_tecnico');
+        $searchPagamento = $request->input('search_pagamento');
 
         $chamados = Chamado::with(['cliente', 'tecnico', 'tipoChamado'])
             ->when($searchCliente, function ($query, $cliente) {
@@ -38,6 +39,10 @@ public function index(Request $request): View
             ->when($searchStatus !== null && $searchStatus !== '', function ($query) use ($searchStatus) {
                 $query->where('status', $searchStatus);
             })
+            // NOVO: Filtro da forma de pagamento
+            ->when($searchPagamento !== null && $searchPagamento !== '', function ($query) use ($searchPagamento) {
+                $query->where('forma_pagamento', $searchPagamento);
+            })
             ->when($searchDateStart, function ($query, $date) {
                 $query->whereDate('created_at', '>=', $date);
             })
@@ -48,7 +53,6 @@ public function index(Request $request): View
             ->paginate(10);
 
         $tiposChamado = TipoChamado::orderBy('nome')->get();
-        
         $tecnicos = User::orderBy('nome')->get();
 
         return view('chamados.index', compact('chamados', 'tiposChamado', 'tecnicos'));
@@ -71,13 +75,12 @@ public function index(Request $request): View
             'tecnico_id' => 'required|exists:users,id',
             'tipo_id' => 'required|exists:tipos_chamado,id',
             'descricao' => 'required|string',
+            'forma_pagamento' => 'nullable|in:Pix,Cartão,Dinheiro',
         ]);
 
         $dados = $request->all();
-
-        // Pega o valor do tecnico_id e joga para a coluna certa
         $dados['user_id'] = $dados['tecnico_id'];
-        unset($dados['tecnico_id']); // Apaga a chave velha para não confundir o banco
+        unset($dados['tecnico_id']);
 
         Chamado::create($dados);
         return redirect()->route('chamados.index')->with('success', 'Chamado aberto com sucesso!');
@@ -108,10 +111,14 @@ public function index(Request $request): View
             'descricao' => 'required|string',
             'status' => 'required|in:aberto,cancelado,concluido',
             'valor_total' => 'required_if:status,concluido|nullable|regex:/^\d{1,8}(,\d{2})?$/',
+            'forma_pagamento' => 'required_if:status,concluido|nullable|in:Pix,Cartão,Dinheiro',
         ], [
             'valor_total.required_if' => 'O campo valor total é obrigatório ao concluir um chamado.',
             'valor_total.regex' => 'O valor total deve estar no formato XXXX,XX.',
-            'status.in' => 'O status selecionado é inválido.'
+            'status.in' => 'O status selecionado é inválido.',
+            // NOVO: Mensagem de erro customizada
+            'forma_pagamento.required_if' => 'A forma de pagamento é obrigatória ao concluir um chamado.',
+            'forma_pagamento.in' => 'A forma de pagamento selecionada é inválida.'
         ]);
 
         $dados = $request->all();

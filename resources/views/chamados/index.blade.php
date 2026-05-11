@@ -54,6 +54,17 @@
                         </select>
                     </div>
 
+                    <!-- Filtro por Forma de Pagamento -->
+                    <div>
+                        <label for="search_pagamento" class="block text-sm font-medium text-gray-700">Pagamento</label>
+                        <select name="search_pagamento" id="search_pagamento" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <option value="">Todos</option>
+                            <option value="Pix" @selected(request('search_pagamento')==='Pix')>Pix</option>
+                            <option value="Cartão" @selected(request('search_pagamento')==='Cartão')>Cartão</option>
+                            <option value="Dinheiro" @selected(request('search_pagamento')==='Dinheiro')>Dinheiro</option>
+                        </select>
+                    </div>
+
                     <!-- Filtro por Data Inicial e Final -->
                     <div>
                         <label for="search_date_start" class="block text-sm font-medium text-gray-700">Data Inicial</label>

@@ -35,10 +35,13 @@
                 <h2 class="text-gray-500 font-semibold">Tipo de Chamado</h2>
                 <p class="text-gray-800">{{ $chamado->tipoChamado->nome }}</p>
             </div>
-            <!-- Valor Total Adicionado -->
             <div>
                 <h2 class="text-gray-500 font-semibold">Valor Total</h2>
                 <p class="text-gray-800 font-bold">{{ $chamado->valor_total ? 'R$ ' . number_format($chamado->valor_total, 2, ',', '.') : 'Não definido' }}</p>
+            </div>
+            <div>
+                <h2 class="text-gray-500 font-semibold">Forma de Pagamento</h2>
+                <p class="text-gray-800">{{ $chamado->forma_pagamento ? $chamado->forma_pagamento : 'Não definido' }}</p>
             </div>
             <div class="md:col-span-2">
                 <h2 class="text-gray-500 font-semibold">Descrição do Problema</h2>
